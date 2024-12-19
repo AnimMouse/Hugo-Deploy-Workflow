@@ -1,0 +1,52 @@
+name: Deploy Hugo to Cloudflare Pages
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
+      account_id:
+        required: true
+        type: string
+      branch:
+        required: true
+        type: string
+      cache_resources:
+        type: boolean
+      ref:
+        type: string
+    secrets:
+      api_token:
+        required: true
+        
+jobs:
+  cf-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+          submodules: true
+          
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        
+      - name: Cache resources
+        if: inputs.cache_resources
+        uses: actions/cache@v4
+        with:
+          path: resources/_gen
+          key: hugo-resources-${{ github.sha }}
+          restore-keys: hugo-resources-
+          
+      - name: Build
+        run: hugo --minify
+        
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.api_token }}
+          accountId: ${{ inputs.account_id }}
+          command: pages deploy public --project-name=${{ inputs.project_name }} --branch=${{ inputs.branch }} --commit-dirty=true
