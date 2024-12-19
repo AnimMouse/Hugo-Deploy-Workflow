@@ -11,10 +11,10 @@ on:
       branch:
         required: true
         type: string
-      cache_resources:
-        type: boolean
       ref:
         type: string
+      cache_resources:
+        type: boolean
     secrets:
       api_token:
         required: true
