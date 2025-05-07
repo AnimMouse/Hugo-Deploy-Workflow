@@ -15,6 +15,8 @@ on:
         type: string
       cache_resources:
         type: boolean
+      extended:
+        type: boolean
     secrets:
       api_token:
         required: true
@@ -32,7 +34,9 @@ jobs:
           
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
-        
+        with:
+          extended: ${{ inputs.extended }}
+          
       - name: Cache resources
         if: inputs.cache_resources
         uses: actions/cache@v4
