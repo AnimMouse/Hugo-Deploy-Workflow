@@ -43,7 +43,9 @@ jobs:
           
       - name: Build
         run: hugo --minify
-        
+        env:
+          HUGO_ENV: production
+          
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
