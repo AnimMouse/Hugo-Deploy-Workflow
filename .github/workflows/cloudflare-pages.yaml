@@ -51,7 +51,7 @@ jobs:
           HUGO_ENV: production
           
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.api_token }}
           accountId: ${{ inputs.account_id }}
